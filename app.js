@@ -2,16 +2,22 @@ const NUMBERS_URL = 'http://numbersapi.com/';
 
 const CARDS_URL = 'https://deckofcardsapi.com/api/deck/';
 
-function get_number_request(...num)
+async function get_number_request(...num)
 {
     //const res = axios.get(`${NUMBERS_URL}${get_ranges_for_numbers(num)}`);
-    return axios.get(`${NUMBERS_URL}${get_ranges_for_numbers(num)}?json`).then((res) => show_batch_number_request(res));
+    //return axios.get(`${NUMBERS_URL}${get_ranges_for_numbers(num)}?json`).then((res) => show_batch_number_request(res));
+    res = await axios.get(`${NUMBERS_URL}${get_ranges_for_numbers(num)}?json`);
+    show_batch_number_request(res);
 }
 
-function get_number_requests(num, amt)
+async function get_number_requests(num, amt)
 {
     //const res = axios.get(`${NUMBERS_URL}${get_ranges_for_numbers(num)}`);
-    for(let i = 0; i < amt; i++) { axios.get(`${NUMBERS_URL}${num}?json`).then((res) => show_number_request(res)); }
+    for(let i = 0; i < amt; i++) 
+    { 
+        res = await axios.get(`${NUMBERS_URL}${num}?json`); 
+        show_number_request(res);
+    }
 }
 
 function show_number_request(res)
@@ -71,12 +77,18 @@ get_number_requests(3, 4);
 let LAST_DECK_ID = '';
 
 //______________________________________________
-function get_card_request(count, id='')
+async function get_card_request(count, id='')
 {
     if(id == '')
-        return axios.get(`${CARDS_URL}new/draw/?count=${count}`).then((res) => show_cards_shuffled(res));
+    {
+        res = await axios.get(`${CARDS_URL}new/draw/?count=${count}`);
+        show_cards_shuffled(res);
+    }
     else
-        return axios.get(`${CARDS_URL}${id}/draw/?count=${count}`).then((res) => show_cards_shuffled(res));
+    {
+        res = await axios.get(`${CARDS_URL}${id}/draw/?count=${count}`);
+        show_cards_shuffled(res);
+    }
 }
 
 function show_cards_shuffled(res)
